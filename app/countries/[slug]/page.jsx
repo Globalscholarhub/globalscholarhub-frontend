@@ -1,15 +1,24 @@
-"use client";
-
 export default function CountryDetails({ params }) {
-  return (
-    <div className="px-6 py-10">
-      <h1 className="text-3xl font-bold mb-3">
-        Country: {params.slug}
-      </h1>
+  const { slug } = params;
 
-      <div className="p-6 bg-white rounded-xl shadow-sm">
-        <p>Scholarship information for this country will appear here.</p>
-      </div>
+  const countryName = slug
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+
+  return (
+    <div className="max-w-5xl mx-auto px-6 py-16">
+      <h1 className="text-4xl font-bold mb-4">{countryName}</h1>
+
+      <p className="text-lg text-gray-700 mb-8">
+        Explore scholarships available in <strong>{countryName}</strong>.
+      </p>
+
+      <a
+        href={`/scholarships?country=${slug}`}
+        className="text-blue-600 underline text-lg"
+      >
+        View Scholarships →
+      </a>
     </div>
   );
 }
