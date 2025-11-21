@@ -1,3 +1,5 @@
+import "./globals.css";
+
 export const metadata = {
   title: "GlobalScholarHub",
   description: "Find scholarships worldwide",
@@ -6,7 +8,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-gray-50 text-black p-10">
+        {children}
+      </body>
     </html>
   );
 }
