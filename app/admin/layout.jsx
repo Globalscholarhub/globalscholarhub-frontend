@@ -4,41 +4,33 @@ export const metadata = {
 
 export default function AdminLayout({ children }) {
   return (
-    <html lang="en">
-      <body className="bg-gray-100 text-gray-900">
-        <div className="flex min-h-screen">
+    <div style={{ display: "flex", minHeight: "100vh", background: "#f5f5f5" }}>
+      
+      {/* SIDEBAR */}
+      <aside
+        style={{
+          width: "250px",
+          background: "#1a1a1a",
+          color: "white",
+          padding: "20px",
+        }}
+      >
+        <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "20px" }}>
+          Admin Panel
+        </h2>
 
-          {/* SIDEBAR */}
-          <aside className="w-72 bg-white shadow-lg">
-            <div className="px-6 py-5 text-2xl font-bold border-b">
-              Admin Panel
-            </div>
+        <nav style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <a href="/admin/dashboard" style={{ color: "white" }}>
+            Dashboard
+          </a>
+          <a href="/admin/login" style={{ color: "white" }}>
+            Logout
+          </a>
+        </nav>
+      </aside>
 
-            <nav className="p-6 space-y-4">
-              <a href="/admin/dashboard" className="block text-lg hover:text-blue-600">
-                📊 Dashboard
-              </a>
-
-              <a href="/admin/scholarships" className="block text-lg hover:text-blue-600">
-                🎓 Manage Scholarships
-              </a>
-
-              <a href="/admin/countries" className="block text-lg hover:text-blue-600">
-                🌍 Manage Countries
-              </a>
-
-              <a href="/admin/login" className="block text-lg hover:text-red-600">
-                🚪 Logout
-              </a>
-            </nav>
-          </aside>
-
-          {/* MAIN CONTENT */}
-          <main className="flex-1 p-10">
-            {children}
-          </main>
-        </div>
-      </body>
-    </html>
+      {/* MAIN CONTENT */}
+      <main style={{ flex: 1, padding: "40px" }}>{children}</main>
+    </div>
   );
 }
