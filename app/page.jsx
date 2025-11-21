@@ -1,1 +1,1 @@
-// Homepage placeholder
+export default function Home(){return <h1>GlobalScholarHub Home</h1>;}
