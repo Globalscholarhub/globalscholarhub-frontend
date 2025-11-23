@@ -1,121 +1,96 @@
 "use client";
 
-import { useState } from "react";
-import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
-import { v4 as uuidv4 } from "uuid";
-import "react-quill/dist/quill.snow.css";
 
-// Load Editor Dynamically (fix SSR issues)
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+export default function BlogAdminPage() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-export default function CreateBlogPost() {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState(""); // HTML content
-  const [image, setImage] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // Fetch all posts
+  const loadPosts = async () => {
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-  // Upload Cover Image
-  const uploadImage = async () => {
-    if (!image) return null;
-
-    const fileExt = image.name.split(".").pop();
-    const fileName = `${uuidv4()}.${fileExt}`;
-    const filePath = `blog/${fileName}`;
-
-    // Upload to Supabase
-    const { error } = await supabase.storage
-      .from("blog-images")
-      .upload(filePath, image);
-
-    if (error) {
-      console.error("Image upload error:", error);
-      return null;
+    if (!error) {
+      setPosts(data);
     }
-
-    // Get Public URL
-    const { data } = supabase.storage
-      .from("blog-images")
-      .getPublicUrl(filePath);
-
-    return data.publicUrl;
+    setLoading(false);
   };
 
-  const submitPost = async () => {
-    if (!title || !content) {
-      alert("Please enter a title and content");
-      return;
-    }
+  useEffect(() => {
+    loadPosts();
+  }, []);
 
-    setLoading(true);
+  const deletePost = async (id) => {
+    if (!confirm("Are you sure you want to delete this post?")) return;
 
-    // upload image if uploaded
-    const image_url = await uploadImage();
+    const { error } = await supabase
+      .from("blog_posts")
+      .delete()
+      .eq("id", id);
 
-    // create post
-    const { error } = await supabase.from("blog_posts").insert([
-      {
-        id: uuidv4(),
-        title,
-        content,
-        image_url,
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-    ]);
-
-    setLoading(false);
-
-    if (error) {
-      alert("Error creating post: " + error.message);
+    if (!error) {
+      alert("Post deleted");
+      loadPosts();
     } else {
-      alert("Blog post created successfully");
-      window.location.href = "/admin/blog";
+      alert("Failed to delete");
     }
   };
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Create Blog Post</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Blog Management</h1>
 
-      {/* Title input */}
-      <input
-        type="text"
-        className="border p-3 w-full rounded"
-        placeholder="Enter blog title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-
-      {/* Rich Text Editor */}
-      <ReactQuill
-        theme="snow"
-        value={content}
-        onChange={setContent}
-        className="bg-white"
-        style={{ height: 300 }}
-      />
-
-      {/* Image Upload */}
-      <div>
-        <label className="block mt-6 mb-2 font-medium">
-          Cover Image (optional)
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
-        />
+        <Link
+          href="/admin/blog/create"
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          ➕ New Post
+        </Link>
       </div>
 
-      {/* Publish Button */}
-      <button
-        onClick={submitPost}
-        disabled={loading}
-        className="bg-blue-700 text-white px-6 py-3 rounded mt-4"
-      >
-        {loading ? "Publishing..." : "Publish Blog Post"}
-      </button>
+      {loading && <p>Loading blog posts...</p>}
+
+      {!loading && posts.length === 0 && (
+        <p>No blog posts found.</p>
+      )}
+
+      <div className="space-y-4">
+        {posts.map((post) => (
+          <div
+            key={post.id}
+            className="border p-4 rounded shadow flex justify-between items-center"
+          >
+            <div>
+              <h2 className="text-xl font-semibold">{post.title}</h2>
+              <p className="text-gray-500 text-sm">
+                {new Date(post.created_at).toLocaleDateString()}
+              </p>
+            </div>
+
+            <div className="flex gap-4">
+              <Link
+                href={`/admin/blog/edit/${post.id}`}
+                className="text-blue-600 underline"
+              >
+                Edit
+              </Link>
+
+              <button
+                className="text-red-600 underline"
+                onClick={() => deletePost(post.id)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
