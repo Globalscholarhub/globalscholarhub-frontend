@@ -27,28 +27,16 @@ export default async function BlogPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <a
+            <div
               key={post.id}
-              href={`/blog/${post.id}`}
-              className="border rounded-xl p-4 shadow hover:shadow-lg transition"
+              className="rounded-lg border p-4 shadow-sm hover:shadow-md transition"
             >
-              {post.image_url && (
-                <img
-                  src={post.image_url}
-                  alt={post.title}
-                  className="w-full h-48 object-cover rounded"
-                />
-              )}
-
-              <h2 className="text-xl font-semibold mt-3">{post.title}</h2>
-              <p className="text-gray-600 mt-2 line-clamp-3">
-                {post.description}
-              </p>
-
-              <p className="text-sm text-gray-400 mt-2">
-                {new Date(post.created_at).toLocaleDateString()}
-              </p>
-            </a>
+              <h2 className="font-bold text-xl mb-2">{post.title}</h2>
+              <p className="text-gray-700">{post.excerpt}</p>
+              <a href={`/blog/${post.id}`} className="text-blue-600 underline">
+                Read More →
+              </a>
+            </div>
           ))}
         </div>
       )}
