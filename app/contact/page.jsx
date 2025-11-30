@@ -1,57 +1,41 @@
+export const metadata = {
+  title: "Contact Us | GlobalScholarHub",
+  description: "Get in touch with GlobalScholarHub support team"
+};
+
 export default function ContactPage() {
   return (
-    <div className="p-6 space-y-8 max-w-3xl mx-auto">
-
-      <h1 className="text-3xl font-bold text-blue-800">Contact Us</h1>
-
-      <p className="text-gray-700">
-        Have questions about scholarships, countries, admissions, or your application?
-        Reach out to us anytime — we’re here to help.
+    <div className="max-w-3xl mx-auto py-10 px-4">
+      <h1 className="text-4xl font-bold mb-6">Contact Us</h1>
+      <p className="mb-6 text-gray-600">
+        Have questions about scholarships, countries, or application guidance?
+        Send us a message — we respond within 24 hours.
       </p>
 
-      {/* CONTACT FORM */}
-      <form
-        className="space-y-4 bg-white p-6 shadow rounded-lg"
-        action="https://formspree.io/f/mjkvzklk"
-        method="POST"
-      >
+      <form className="grid grid-cols-1 gap-4">
         <input
           type="text"
-          name="name"
           placeholder="Your Name"
+          className="p-3 border rounded-lg"
           required
-          className="border p-3 w-full rounded"
         />
-
         <input
           type="email"
-          name="email"
           placeholder="Your Email"
+          className="p-3 border rounded-lg"
           required
-          className="border p-3 w-full rounded"
         />
-
         <textarea
-          name="message"
-          rows={5}
           placeholder="Your Message"
+          rows="5"
+          className="p-3 border rounded-lg"
           required
-          className="border p-3 w-full rounded"
         ></textarea>
 
-        <button className="bg-blue-700 text-white px-6 py-3 rounded w-full">
+        <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
           Send Message
         </button>
       </form>
-
-      {/* WhatsApp */}
-      <a
-        href="https://wa.me/910000000000?text=Hello%20I%20need%20help"
-        target="_blank"
-        className="block bg-green-600 text-white text-center px-6 py-3 rounded"
-      >
-        💬 Chat with us on WhatsApp
-      </a>
     </div>
   );
 }
