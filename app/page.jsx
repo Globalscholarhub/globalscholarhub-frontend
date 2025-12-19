@@ -1,93 +1,44 @@
-import Link from "next/link";
-import { supabase } from "@/lib/supabaseClient";
+"use client";
 
-export default async function HomePage() {
-  // Fetch countries
-  const { data: countries } = await supabase
-    .from("countries")
-    .select("*")
-    .limit(6);
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-  // Fetch latest blog posts
-  const { data: posts } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(3);
+export default function HomePage() {
+  const [query, setQuery] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!query) return;
+    router.push(`/scholarships?search=${encodeURIComponent(query)}`);
+  };
 
   return (
-    <div className="space-y-20">
+    <div className="max-w-5xl mx-auto py-16 px-4 text-center">
+      <h1 className="text-5xl font-bold mb-6">
+        Find Scholarships Worldwide
+      </h1>
 
-      {/* HERO SECTION */}
-      <section className="text-center py-20 bg-blue-50 rounded-xl shadow-sm">
-        <h1 className="text-4xl font-bold mb-4 text-blue-900">
-          Find Scholarships Around the World
-        </h1>
-        <p className="text-lg text-gray-700 mb-8">
-          Search scholarships by country, course, or your academic goal.
-        </p>
+      <p className="text-gray-600 mb-8">
+        Search scholarships by country, degree, or program.
+      </p>
 
-        <div className="flex justify-center">
-          <Link
-            href="/scholarships"
-            className="bg-blue-700 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-800"
-          >
-            Explore Scholarships
-          </Link>
-        </div>
-      </section>
+      <form
+        onSubmit={handleSearch}
+        className="flex flex-col md:flex-row gap-4 justify-center"
+      >
+        <input
+          type="text"
+          placeholder="Search scholarships..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="p-4 border rounded-lg w-full md:w-96"
+        />
 
-      {/* FEATURED COUNTRIES */}
-      <section>
-        <h2 className="text-2xl font-bold mb-4">Popular Countries</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {countries?.map((country) => (
-            <Link
-              key={country.id}
-              href={`/countries/${country.id}`}
-              className="border p-4 rounded-lg shadow hover:bg-gray-50"
-            >
-              {country.name}
-            </Link>
-          ))}
-        </div>
-
-        <div className="mt-4">
-          <Link
-            href="/countries"
-            className="text-blue-700 underline"
-          >
-            View all countries →
-          </Link>
-        </div>
-      </section>
-
-      {/* BLOG SECTION */}
-      <section>
-        <h2 className="text-2xl font-bold mb-4">Latest Scholarship News</h2>
-
-        <div className="grid gap-6 md:grid-cols-3">
-          {posts?.map((post) => (
-            <Link
-              key={post.id}
-              href={`/blog/${post.id}`}
-              className="block border rounded-lg p-4 shadow hover:bg-gray-50"
-            >
-              <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-              <p className="text-gray-600">
-                {post.content.substring(0, 100)}...
-              </p>
-            </Link>
-          ))}
-        </div>
-
-        <div className="mt-4">
-          <Link href="/blog" className="text-blue-700 underline">
-            View all posts →
-          </Link>
-        </div>
-      </section>
-
+        <button className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700">
+          Search
+        </button>
+      </form>
     </div>
   );
 }
