@@ -34,6 +34,12 @@ export default function ContactPage() {
     <div className="max-w-3xl mx-auto py-10 px-4">
       <h1 className="text-4xl font-bold mb-6">Contact Us</h1>
 
+      <div className="mb-6 text-gray-700">
+        <p>📍 Helping students find global scholarships</p>
+        <p>📧 Email: support@globalscholarhub.com</p>
+        <p>🌍 Serving international students worldwide</p>
+      </div>
+
       {success && (
         <p className="mb-4 text-green-600">
           ✅ Thank you! Your message has been sent.
@@ -72,6 +78,17 @@ export default function ContactPage() {
           {loading ? "Sending..." : "Send Message"}
         </button>
       </form>
+
+      <div className="mt-10 text-center">
+        <p className="mb-2 text-gray-600">Prefer instant help?</p>
+        <a
+          href="https://wa.me/919999999999"
+          target="_blank"
+          className="inline-block bg-green-500 text-white px-6 py-3 rounded-lg"
+        >
+          Chat on WhatsApp
+        </a>
+      </div>
     </div>
   );
 }
